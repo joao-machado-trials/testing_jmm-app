@@ -22,4 +22,4 @@ RUN mvn clean package -DskipTests
 EXPOSE 8080
 
 # Comando para iniciar a aplicação
-CMD ["java", "-jar", "target/Base_Project-1.0.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/Base_Project-1.0.0.jar"]
