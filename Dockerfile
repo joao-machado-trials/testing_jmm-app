@@ -1,23 +1,24 @@
-# Use Java 17 (Eclipse Temurin) como base
+# Use Java 17 como base
 FROM eclipse-temurin:17-jdk-alpine
+
+# Instalar Maven e bash
+RUN apk add --no-cache maven bash
 
 # Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar o pom.xml e baixar dependências (para cache de builds)
+# Copiar pom.xml e baixar dependências offline (cache de build)
 COPY pom.xml .
-# Criar pasta src temporária para o Maven offline
 RUN mkdir -p src && echo "" > src/placeholder
-# Baixar dependências offline
-RUN ./mvnw dependency:go-offline || mvn dependency:go-offline
+RUN mvn dependency:go-offline
 
-# Copiar todo o código
+# Copiar todo o código da aplicação
 COPY . .
 
-# Build do projeto
-RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests
+# Build do projeto (skip testes para acelerar)
+RUN mvn clean package -DskipTests
 
-# Expor a porta que o Spring Boot vai usar
+# Expor a porta que Spring Boot vai usar
 EXPOSE 8080
 
 # Comando para iniciar a aplicação
