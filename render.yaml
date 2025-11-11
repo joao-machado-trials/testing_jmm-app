@@ -1,12 +1,12 @@
 databases:
-  - name: testing_jmm-db
+  - name: jmm-db
     plan: free
-    databaseName: testing_jmm
+    databaseName: jmm-db
     user: jmm
 
 services:
   - type: web
-    name: testing_jmm-app
+    name: jmm-app
     env: java
     plan: free
     buildCommand: "./mvnw clean package -DskipTests"
@@ -16,15 +16,15 @@ services:
         value: 8080
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
-          name: testing_jmm-db
+          name: jmm-db
           property: connectionString
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
-          name: testing_jmm-db
+          name: jmm-db
           property: user
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
-          name: testing_jmm-db
+          name: jmm-db
           property: password
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
