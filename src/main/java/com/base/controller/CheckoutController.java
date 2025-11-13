@@ -1,13 +1,11 @@
 package com.base.controller;
 
-import com.base.repository.SubscriptionRepository;
 import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,11 +15,11 @@ import java.util.Map;
 @Controller
 public class CheckoutController {
 
-    @Value("${STRIPE_SUCCESS_URL}")
-    private String successUrl;
+    //@Value("${STRIPE_SUCCESS_URL}")
+    //private String successUrl;
 
-    @Value("${STRIPE_CANCEL_URL}")
-    private String cancelUrl;
+    //@Value("${STRIPE_CANCEL_URL}")
+    //private String cancelUrl;
 
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
@@ -41,7 +39,12 @@ public class CheckoutController {
 
     @GetMapping("/create-checkout-session")
     @ResponseBody
-    public Map<String, Object> createCheckoutSession() throws Exception {
+    public Map<String, Object> createCheckoutSession(HttpServletRequest request) throws Exception {
+
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String successUrl = baseUrl + "/success";
+        String cancelUrl = baseUrl + "/cancel";
+
         Stripe.apiKey = secretKey;
 
         SessionCreateParams params =
