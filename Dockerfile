@@ -16,7 +16,7 @@ RUN mvn dependency:go-offline
 COPY . .
 
 # Build do projeto (skip testes para acelerar)
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="--enable-native-access=ALL-UNNAMED"
 
 # Expor a porta que Spring Boot vai usar
 EXPOSE 8080
