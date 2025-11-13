@@ -17,6 +17,12 @@ import java.util.Map;
 @Controller
 public class CheckoutController {
 
+    @Value("${STRIPE_SUCCESS_URL}")
+    private String successUrl;
+
+    @Value("${STRIPE_CANCEL_URL}")
+    private String cancelUrl;
+
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
 
@@ -41,8 +47,8 @@ public class CheckoutController {
         SessionCreateParams params =
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                        .setSuccessUrl("redirect:/success")
-                        .setCancelUrl("redirect:/cancel")
+                        .setSuccessUrl(successUrl)
+                        .setCancelUrl(cancelUrl)
                         .addLineItem(
                                 SessionCreateParams.LineItem.builder()
                                         .setQuantity(1L)
