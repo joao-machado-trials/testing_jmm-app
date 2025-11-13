@@ -1,25 +1,29 @@
-# Use Java 17 como base
-FROM eclipse-temurin:17-jdk-alpine
+# Etapa 1 — Build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
-# Instalar Maven e bash
-RUN apk add --no-cache maven bash
-
-# Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar pom.xml e baixar dependências offline (cache de build)
+# Copiar pom.xml e baixar dependências primeiro (cache)
 COPY pom.xml .
-RUN mkdir -p src && echo "" > src/placeholder
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -B
 
-# Copiar todo o código da aplicação
-COPY . .
+# Copiar código-fonte e construir o JAR
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Build do projeto (skip testes para acelerar)
-RUN mvn clean package -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="--enable-native-access=ALL-UNNAMED"
+# Etapa 2 — Runtime
+FROM eclipse-temurin:17-jdk
 
-# Expor a porta que Spring Boot vai usar
+WORKDIR /app
+
+# Copiar o JAR compilado da etapa anterior
+COPY --from=build /app/target/*.jar app.jar
+
+# Definir argumento JVM para acesso nativo (corrigido)
+ENV JAVA_OPTS="--enable-native-access=ALL-UNNAMED"
+
+# Expor porta padrão do Spring Boot
 EXPOSE 8080
 
-# Comando para iniciar a aplicação
-CMD ["java", "-jar", "target/Base_Project-1.0.0.jar"]
+# Comando de execução
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
