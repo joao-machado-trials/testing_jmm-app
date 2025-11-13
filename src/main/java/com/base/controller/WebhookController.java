@@ -23,7 +23,7 @@ public class WebhookController {
         this.subsService = subsService;
     }
 
-    @Value("${stripe.webhook-secret}")
+    @Value("${STRIPE_WEBHOOK_SECRET}")
     private String webhookSecret;
 
     @PostMapping

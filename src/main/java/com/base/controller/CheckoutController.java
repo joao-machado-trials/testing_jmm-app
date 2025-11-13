@@ -17,19 +17,19 @@ import java.util.Map;
 @Controller
 public class CheckoutController {
 
-    @Value("${stripe.secret-key}")
+    @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
 
-    @Value("${stripe.public-key}")
-    private String publishableKey;
+    @Value("${STRIPE_PUBLIC_KEY}")
+    private String publishKey;
 
-    @Value("${stripe.price-id}")
+    @Value("${STRIPE_PRICE_ID}")
     private String priceId;
 
     @GetMapping("/")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("index");
-        mav.addObject("publishableKey", publishableKey);
+        mav.addObject("publishableKey", publishKey);
         return mav;
     }
 
