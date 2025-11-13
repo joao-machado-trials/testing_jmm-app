@@ -23,8 +23,7 @@ COPY --from=build /app/target/*.jar app.jar
 ENV JAVA_OPTS="--enable-native-access=ALL-UNNAMED"
 
 # Porta dinâmica (Render define a variável PORT)
-ENV PORT=8080
 EXPOSE 8080
 
 # Executar Spring Boot e garantir que usa o PORT do ambiente
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dserver.port=${PORT} -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dserver.port=${PORT:-8080} -jar app.jar"]
