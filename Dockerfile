@@ -19,11 +19,12 @@ WORKDIR /app
 # Copiar o JAR compilado da etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
-# Definir argumento JVM para acesso nativo (corrigido)
+# Permitir acesso nativo (evita warning do Tomcat)
 ENV JAVA_OPTS="--enable-native-access=ALL-UNNAMED"
 
-# Expor porta padrão do Spring Boot
+# Porta dinâmica (Render define a variável PORT)
+ENV PORT=8080
 EXPOSE 8080
 
-# Comando de execução
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# Executar Spring Boot e garantir que usa o PORT do ambiente
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dserver.port=${PORT} -jar app.jar"]
