@@ -41,8 +41,8 @@ public class CheckoutController {
         SessionCreateParams params =
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                        .setSuccessUrl("http://localhost:8080/success")
-                        .setCancelUrl("http://localhost:8080/cancel")
+                        .setSuccessUrl("redirect:/success")
+                        .setCancelUrl("redirect:/cancel")
                         .addLineItem(
                                 SessionCreateParams.LineItem.builder()
                                         .setQuantity(1L)
